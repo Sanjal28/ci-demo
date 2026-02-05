@@ -1,7 +1,85 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <h1>Hello DevOps</h1>
-  </body>
-</html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DevOps CI/CD Demo</title>
 
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 12px;
+            width: 420px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h1 {
+            margin-bottom: 10px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            font-size: 15px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .status {
+            margin-top: 25px;
+            padding: 12px;
+            background: #00c853;
+            color: #003300;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .footer span {
+            color: #ffcc00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h1>🚀 DevOps CI/CD Pipeline</h1>
+
+        <p>
+            This application is automatically built and deployed using
+            <strong>Jenkins</strong>, <strong>Docker</strong>, and
+            <strong>GitHub</strong>.
+        </p>
+
+        <div class="status">
+            ✅ Deployment Successful
+        </div>
+
+        <div class="footer">
+            Powered by <span>Jenkins + Docker</span>
+        </div>
+    </div>
+
+</body>
+</html>
