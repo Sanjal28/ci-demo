@@ -11,15 +11,20 @@ pipeline {
 
         stage('Verify Files') {
             steps {
-                echo "Listing files in workspace"
                 sh "ls -l"
             }
         }
 
-        stage('Read File') {
+        stage('Build Docker Image') {
             steps {
-                echo "Displaying index.html content"
-                sh "cat index.html"
+                echo "Building Docker image"
+                sh "docker build -t devops-frontend:ci ."
+            }
+        }
+
+        stage('Verify Image') {
+            steps {
+                sh "docker images | grep devops-frontend"
             }
         }
     }
