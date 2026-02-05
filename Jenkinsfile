@@ -1,45 +1,56 @@
 pipeline {
     agent any
 
-    options {
-        skipDefaultCheckout()
+    environment {
+        JFROG_REGISTRY = "trial0dpg9z.jfrog.io"
+        JFROG_REPO     = "docker-trial"
+        IMAGE_NAME    = "devops-frontend"
+        IMAGE_TAG     = "v${BUILD_NUMBER}"
+        FULL_IMAGE    = "${JFROG_REGISTRY}/${JFROG_REPO}/${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
     stages {
+
         stage('Checkout Code') {
             steps {
-                echo "Pulling code from GitHub"
                 checkout scm
-            }
-        }
-
-        stage('Verify Files') {
-            steps {
-                sh "ls -l"
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image"
-                sh "docker build -t devops-frontend:ci ."
+                sh "docker build -t ${IMAGE_NAME}:ci ."
             }
         }
 
-        stage('Verify Image') {
+        stage('Login to JFrog') {
             steps {
-                sh "docker images | grep devops-frontend"
+                withCredentials([usernamePassword(
+                    credentialsId: 'jfrog-docker',
+                    usernameVariable: 'JFROG_USER',
+                    passwordVariable: 'JFROG_TOKEN'
+                )]) {
+                    sh """
+                        echo \$JFROG_TOKEN | docker login ${JFROG_REGISTRY} \
+                        -u \$JFROG_USER --password-stdin
+                    """
+                }
             }
         }
 
-        stage('Deploy') {
+        stage('Tag & Push Image') {
             steps {
-                sh '''
-                docker stop frontend-test || true
-                docker rm frontend-test || true
-                docker run -d -p 8085:80 --name frontend-test devops-frontend:ci
-                '''
+                sh """
+                    docker tag ${IMAGE_NAME}:ci ${FULL_IMAGE}
+                    docker push ${FULL_IMAGE}
+                """
             }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ CI complete. Image pushed to JFrog: ${FULL_IMAGE}"
         }
     }
 }
