@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        skipDefaultCheckout()
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -25,6 +29,16 @@ pipeline {
         stage('Verify Image') {
             steps {
                 sh "docker images | grep devops-frontend"
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                docker stop frontend-test || true
+                docker rm frontend-test || true
+                docker run -d -p 8085:80 --name frontend-test devops-frontend:ci
+                '''
             }
         }
     }
